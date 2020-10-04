@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/faiface/pixel"
@@ -33,7 +32,7 @@ func (toolbox *ToolboxComponent) SelectItem(position pixel.Vec) {
 	toolboxPosition := toolbox.baseMatrix.Unproject(position)
 
 	tileID := int(math.Floor((toolboxPosition.Y) / 60))
-	fmt.Printf("Click at: %+v, tileID is %d\n", toolboxPosition, tileID)
+	//fmt.Printf("Click at: %+v, tileID is %d\n", toolboxPosition, tileID)
 	if 0 <= tileID && tileID < len(toolbox.systems.input.RemainingTools) {
 		if toolbox.systems.input.SelectedTile == toolbox.systems.input.RemainingTools[tileID] {
 			toolbox.systems.input.SelectedTile.Mark(false)

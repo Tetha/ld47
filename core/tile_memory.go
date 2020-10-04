@@ -44,6 +44,11 @@ func (tile *TileMemory) Draw(sprites *SpriteSystem, target pixel.Target, positio
 	} else {
 		memoryIcon.DrawColorMask(target, pixel.IM.Scaled(pixel.ZV, 0.25).Chained(position).Moved(pixel.V(0, 5)), pixel.Alpha(0.7))
 	}
+
+	if tile.marked {
+		marker := sprites.tileSprites[LargeTileMarker]
+		marker.Draw(target, position)
+	}
 }
 
 func (tile *TileMemory) Mark(marked bool) {
