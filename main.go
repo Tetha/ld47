@@ -11,7 +11,7 @@ import (
 
 func run() {
 	cfg := pixelgl.WindowConfig{
-		Title:  "Yay pixel",
+		Title:  "Ghosts in Limbo",
 		Bounds: pixel.R(0, 0, 1024, 768),
 		VSync:  true,
 	}
