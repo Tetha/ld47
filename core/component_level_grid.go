@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/faiface/pixel"
@@ -38,6 +37,9 @@ func (levelGrid *LevelGridComponent) DrawLevelGrid(target pixel.Target, tickPerc
 
 	for idx := range levelGrid.systems.simulation.CurrentGhostPositions {
 		currentPosition := levelGrid.systems.simulation.CurrentGhostPositions[idx]
+		if currentPosition.ascended {
+			continue
+		}
 		//spew.Dump("In draw", currentPosition)
 		nextPosition := currentPosition
 		if idx < len(levelGrid.systems.simulation.NextGhostPositions) {
@@ -85,7 +87,6 @@ func (grid *LevelGridComponent) GetTile(position pixel.Vec) (uint, uint, bool, T
 	tileX := uint(math.Floor((componentPos.X + 24) / 48))
 	tileY := uint(math.Floor((componentPos.Y + 24) / 48))
 
-	fmt.Printf("tileX = %d, tileX = %d\n", tileX, tileY)
 	for _, tile := range grid.systems.level.PresetTiles {
 		if tile.x == tileX && tile.y == tileY {
 			return tileX, tileY, true, tile.content

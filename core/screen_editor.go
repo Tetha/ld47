@@ -19,6 +19,10 @@ type EditLevelScreen struct {
 func NewEditLevelScreen(systems *Systems) *EditLevelScreen {
 	systems.MainScreen.UpperButtonText.Clear()
 	fmt.Fprint(systems.MainScreen.UpperButtonText, ">> Run! >>")
+
+	systems.MainScreen.DescriptionText.Clear()
+	fmt.Fprint(systems.MainScreen.DescriptionText, systems.level.Description)
+
 	result := &EditLevelScreen{
 		systems: systems,
 		batch:   pixel.NewBatch(&pixel.TrianglesData{}, systems.Sprites.Sheet),
@@ -50,13 +54,11 @@ func (screen *EditLevelScreen) Click(pos pixel.Vec) GameState {
 	inputSystem := screen.systems.input
 	if pixel.R(875, 400, 1000, 800).Contains(pos) {
 		// toolbox clicked
-		fmt.Printf("Toolbox\n")
 		screen.toolbox.SelectItem(pos)
 	}
 
 	if pixel.R(0, 0, 800, 800).Contains(pos) {
 		// screen
-		fmt.Printf("Screen\n")
 		tileX, tileY, preset, tile := screen.levelGrid.GetTile(pos)
 		if inputSystem.SelectedTile == nil {
 			if tile != nil && !preset {
@@ -88,9 +90,7 @@ func (screen *EditLevelScreen) Click(pos pixel.Vec) GameState {
 	}
 	screen.levelGrid.HighlightEmpty = inputSystem.SelectedTile != nil
 
-	fmt.Printf("%+v\n", pos)
 	if screen.systems.MainScreen.UpperButtonBounds.Contains(pos) {
-		fmt.Println("GOGO", pos)
 		return GameStateSimulation
 	}
 	return GameStateKeep

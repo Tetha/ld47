@@ -52,6 +52,10 @@ var directionToArrowSprite = map[GhostDirection]LargeTileID{
 func (tile *TileGhost) Mark(marked bool) {
 }
 
+func (tile *TileGhost) Reset() {
+	tile.displayDirection = false
+}
+
 func (tile *TileGhost) Draw(sprites *SpriteSystem, target pixel.Target, position pixel.Matrix) {
 	ghostSprite := sprites.tileSprites[LargeTileGhost]
 	ghostSprite.DrawColorMask(target, position, ghostToColorMask[tile.ghostID])

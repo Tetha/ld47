@@ -57,7 +57,30 @@ func (screen *SimulationScreen) Run(target pixel.Target, dt float64) GameState {
 	screen.timeSinceLastSimulation += dt
 
 	if screen.timeSinceLastSimulation >= timeBetweenSimulationTicks {
-		screen.DoPhysicsStep()
+		allAscended := screen.DoPhysicsStep()
+		if allAscended {
+			screen.systems.level.Won = true
+
+			screen.systems.MainScreen.DescriptionText.Clear()
+			fmt.Fprintln(screen.systems.MainScreen.DescriptionText, `Ayy you win!
+			
+No there is no
+fancy victory
+screen.
+
+But the level
+name just became
+green. That's 
+something!`)
+
+			for _, tile := range screen.systems.level.PresetTiles {
+				tile.content.Reset()
+			}
+			for _, tile := range screen.systems.level.Toolbox {
+				tile.Reset()
+			}
+			return GameStateLevelSelect
+		}
 		screen.timeSinceLastSimulation = 0
 	}
 
@@ -68,12 +91,13 @@ func (screen *SimulationScreen) Run(target pixel.Target, dt float64) GameState {
 	return GameStateKeep
 }
 
-func (screen *SimulationScreen) DoPhysicsStep() {
+func (screen *SimulationScreen) DoPhysicsStep() bool {
 	state := screen.systems.simulation
 
 	state.CurrentGhostPositions = state.NextGhostPositions
 	state.NextGhostPositions = nil
 
+	allAscended := true
 	for idx := range state.CurrentGhostPositions {
 		ghostPosition := &state.CurrentGhostPositions[idx]
 		for _, tile := range screen.systems.level.PresetTiles {
@@ -88,13 +112,14 @@ func (screen *SimulationScreen) DoPhysicsStep() {
 			}
 		}
 
-		newNextPosition := GhostPosition{
-			x:         ghostPosition.x,
-			y:         ghostPosition.y,
-			direction: ghostPosition.direction,
-			id:        ghostPosition.id,
-			inventory: append([]MemoryType(nil), ghostPosition.inventory...),
+		if ghostPosition.ascended {
+			newNextPosition := ghostPosition.Clone()
+			state.NextGhostPositions = append(state.NextGhostPositions, newNextPosition)
+			continue
 		}
+		allAscended = false
+
+		newNextPosition := ghostPosition.Clone()
 
 		switch ghostPosition.direction {
 		case GhostDirectionDown:
@@ -111,10 +136,17 @@ func (screen *SimulationScreen) DoPhysicsStep() {
 		//spew.Dump(ghostPosition, newNextPosition)
 		state.NextGhostPositions = append(state.NextGhostPositions, newNextPosition)
 	}
+	return allAscended
 }
 
 func (screen *SimulationScreen) Click(pos pixel.Vec) GameState {
 	if screen.systems.MainScreen.UpperButtonBounds.Contains(pos) {
+		for _, tile := range screen.systems.level.PresetTiles {
+			tile.content.Reset()
+		}
+		for _, tile := range screen.systems.level.Toolbox {
+			tile.Reset()
+		}
 		return GameStateEdit
 	}
 	return GameStateKeep

@@ -16,10 +16,16 @@ type TileMemory struct {
 	memoryType MemoryType
 	ghostID    GhostID
 	collected  bool
+
+	marked bool
 }
 
 func NewTileMemory(ghostID GhostID, memoryType MemoryType) *TileMemory {
 	return &TileMemory{memoryType: memoryType, ghostID: ghostID}
+}
+func (tile *TileMemory) Reset() {
+	tile.collected = false
+	tile.marked = false
 }
 
 var memoryTypeToTile = map[MemoryType]LargeTileID{
@@ -41,6 +47,7 @@ func (tile *TileMemory) Draw(sprites *SpriteSystem, target pixel.Target, positio
 }
 
 func (tile *TileMemory) Mark(marked bool) {
+	tile.marked = marked
 }
 
 func (tile *TileMemory) ModifyGhostPosition(position *GhostPosition) {

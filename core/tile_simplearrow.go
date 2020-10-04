@@ -62,6 +62,9 @@ func (tile *TileSimpleArrow) Draw(sprites *SpriteSystem, target pixel.Target, po
 func (tile *TileSimpleArrow) Mark(marked bool) {
 	tile.Marked = marked
 }
+func (tile *TileSimpleArrow) Reset() {
+	tile.Marked = false
+}
 
 func (tile *TileSimpleArrow) ModifyGhostPosition(position *GhostPosition) {
 	switch tile.direction {

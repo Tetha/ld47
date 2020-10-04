@@ -25,7 +25,7 @@ func run() {
 	if err != nil {
 		panic(err)
 	}
-	state := core.GameStateTileTest
+	state := core.GameStateLevelSelect
 	lastState := core.GameStateNone
 	var screen core.Screen
 	last := time.Now()
@@ -40,6 +40,7 @@ func run() {
 		systems.Sprites.MaskSprites[core.MaskGeneric].Draw(win, pixel.IM.Moved(pixel.V(1024/2, 768/2)))
 		systems.MainScreen.UpperButtonText.Draw(win, pixel.IM)
 		systems.MainScreen.LowerButtonText.Draw(win, pixel.IM)
+		systems.MainScreen.DescriptionText.Draw(win, pixel.IM)
 
 		if win.Pressed(pixelgl.KeyEscape) {
 			return
@@ -66,7 +67,13 @@ func run() {
 			}
 		}
 
+		if stateChanged {
+			systems.MainScreen.UpperButtonText.Clear()
+			systems.MainScreen.LowerButtonText.Clear()
+		}
 		switch state {
+		case core.GameStateQuit:
+			return
 		case core.GameStateTileTest:
 			if stateChanged {
 				screen = core.NewTileTestScreen(systems)
@@ -94,6 +101,11 @@ func run() {
 		case core.GameStateSimulation:
 			if stateChanged {
 				screen = core.NewSimulationScreen(systems)
+			}
+
+		case core.GameStateLevelSelect:
+			if stateChanged {
+				screen = core.NewScreenLevelSelect(systems)
 			}
 		}
 		newState := screen.Run(win, dt)

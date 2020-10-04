@@ -21,3 +21,6 @@ func (tile *TileEmpty) Mark(marked bool) {
 
 func (tile *TileEmpty) ModifyGhostPosition(position *GhostPosition) {
 }
+
+func (tile *TileEmpty) Reset() {
+}

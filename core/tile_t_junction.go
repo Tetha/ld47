@@ -30,6 +30,7 @@ type TileTJunction struct {
 
 	RequiredMemory MemoryType
 	Ghost          GhostID
+	Marked         bool
 }
 
 func NewTileTJunction(ghost GhostID, requiredMemory MemoryType, direction TJunctionDirection, junctionLeft bool, memoryOnStraight bool) *TileTJunction {
@@ -44,6 +45,10 @@ func NewTileTJunction(ghost GhostID, requiredMemory MemoryType, direction TJunct
 }
 
 func (tile *TileTJunction) Mark(marked bool) {
+	tile.Marked = marked
+}
+func (tile *TileTJunction) Reset() {
+	tile.Marked = false
 }
 
 func (tile *TileTJunction) Draw(sprites *SpriteSystem, target pixel.Target, position pixel.Matrix) {
@@ -58,10 +63,10 @@ func (tile *TileTJunction) Draw(sprites *SpriteSystem, target pixel.Target, posi
 		baseTransformation = baseTransformation.Scaled(pixel.ZV, -1)
 	}
 	if tile.Direction == TJunctionLeft {
-		baseTransformation = baseTransformation.Rotated(pixel.ZV, -math.Pi/2)
+		baseTransformation = baseTransformation.Rotated(pixel.ZV, math.Pi/2)
 	}
 	if tile.Direction == TJunctionRight {
-		baseTransformation = baseTransformation.Rotated(pixel.ZV, math.Pi/2)
+		baseTransformation = baseTransformation.Rotated(pixel.ZV, -math.Pi/2)
 	}
 
 	baseTransformation = baseTransformation.Chained(position)
@@ -83,6 +88,10 @@ func (tile *TileTJunction) Draw(sprites *SpriteSystem, target pixel.Target, posi
 	memoryTile.DrawColorMask(target, pixel.IM.Scaled(pixel.ZV, 0.25).Moved(memoryOffset).Chained(baseTransformation), ghostToColorMask[tile.Ghost])
 	noneTile.Draw(target, pixel.IM.Scaled(pixel.ZV, 0.25).Moved(noneOffset).Chained(baseTransformation))
 
+	if tile.Marked {
+		marker := sprites.tileSprites[LargeTileMarker]
+		marker.Draw(target, position)
+	}
 }
 
 func (tile *TileTJunction) ModifyGhostPosition(position *GhostPosition) {

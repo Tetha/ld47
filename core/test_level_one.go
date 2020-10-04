@@ -1,6 +1,24 @@
 package core
 
 var TestLevelOne = Level{
+	Name: "Tutorial",
+	Description: `Look at these
+ghosts. They are
+stuck in limbo.
+
+Use these arrows 
+and guide them to
+the goal (that
+circle).
+
+Click on them in
+the toolbox, then
+the grid to place
+them. To remove
+them. click again.
+
+Then click Run to
+see what happens`,
 	PresetTiles: []TileDefinition{
 		{
 			x:       4,
@@ -41,6 +59,11 @@ var TestLevelOne = Level{
 			x:       10,
 			y:       10,
 			content: NewTileSimpleArrow(ArrowDirectionRightTurnFromLeft),
+		},
+		{
+			x:       13,
+			y:       7,
+			content: NewTileGoal(),
 		},
 	},
 	InitialGhostPositions: []GhostPosition{

@@ -15,6 +15,7 @@ type GhostPosition struct {
 	id        GhostID
 	direction GhostDirection
 	inventory []MemoryType
+	ascended  bool
 }
 
 func (p GhostPosition) HasMemory(requiredMemType MemoryType) bool {
@@ -42,6 +43,7 @@ func (p GhostPosition) Clone() GhostPosition {
 		direction: p.direction,
 		id:        p.id,
 		inventory: append([]MemoryType(nil), p.inventory...),
+		ascended:  p.ascended,
 	}
 }
 func TurnLeft(direction GhostDirection) GhostDirection {

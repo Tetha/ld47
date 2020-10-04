@@ -7,6 +7,9 @@ type TileDefinition struct {
 }
 
 type Level struct {
+	Name                  string
+	Description           string
+	Won                   bool
 	Toolbox               []Tile
 	PresetTiles           []TileDefinition
 	InitialGhostPositions []GhostPosition

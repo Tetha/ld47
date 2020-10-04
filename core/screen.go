@@ -15,6 +15,8 @@ const (
 	GameStateEditTest1
 	GameStateSimulation
 	GameStateEdit
+	GameStateLevelSelect
+	GameStateQuit
 )
 
 type Screen interface {

@@ -3,6 +3,7 @@ package core
 import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/text"
+	"golang.org/x/image/colornames"
 	"golang.org/x/image/font/basicfont"
 )
 
@@ -31,7 +32,14 @@ func InitSystems() (*Systems, error) {
 	result.MainScreen.UpperButtonText = text.New(
 		pixel.V(result.MainScreen.UpperButtonBounds.Min.X+10, result.MainScreen.UpperButtonBounds.Min.Y+10),
 		result.MainScreen.Atlas)
-	result.MainScreen.LowerButtonText = text.New(result.MainScreen.LowerButtonBounds.Center(), result.MainScreen.Atlas)
+	result.MainScreen.LowerButtonText = text.New(
+		pixel.V(result.MainScreen.LowerButtonBounds.Min.X+10, result.MainScreen.LowerButtonBounds.Min.Y+10),
+		result.MainScreen.Atlas)
+
+	result.MainScreen.DescriptionText = text.New(
+		pixel.V(870, 340),
+		result.MainScreen.Atlas)
+	result.MainScreen.DescriptionText.Color = colornames.Black
 	return result, nil
 }
 
@@ -53,4 +61,6 @@ type MainButtons struct {
 
 	UpperButtonBounds pixel.Rect
 	LowerButtonBounds pixel.Rect
+
+	DescriptionText *text.Text
 }

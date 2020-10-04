@@ -20,4 +20,8 @@ func (tile *TileGoal) Mark(marked bool) {
 }
 
 func (tile *TileGoal) ModifyGhostPosition(position *GhostPosition) {
+	position.ascended = true
+}
+
+func (tile *TileGoal) Reset() {
 }
