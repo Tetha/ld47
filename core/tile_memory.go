@@ -15,6 +15,7 @@ const (
 type TileMemory struct {
 	memoryType MemoryType
 	ghostID    GhostID
+	collected  bool
 }
 
 func NewTileMemory(ghostID GhostID, memoryType MemoryType) *TileMemory {
@@ -32,5 +33,16 @@ func (tile *TileMemory) Draw(sprites *SpriteSystem, target pixel.Target, positio
 	memoryBubble.Draw(target, position)
 
 	memoryIcon := sprites.tileSprites[memoryTypeToTile[tile.memoryType]]
-	memoryIcon.DrawColorMask(target, pixel.IM.Scaled(pixel.ZV, 0.25).Chained(position).Moved(pixel.V(0, 5)), ghostToColorMask[tile.ghostID])
+	if !tile.collected {
+		memoryIcon.DrawColorMask(target, pixel.IM.Scaled(pixel.ZV, 0.25).Chained(position).Moved(pixel.V(0, 5)), ghostToColorMask[tile.ghostID])
+	} else {
+		memoryIcon.DrawColorMask(target, pixel.IM.Scaled(pixel.ZV, 0.25).Chained(position).Moved(pixel.V(0, 5)), pixel.Alpha(0.7))
+	}
+}
+
+func (tile *TileMemory) ModifyGhostPosition(position *GhostPosition) {
+	if !tile.collected {
+		position.inventory = append(position.inventory, tile.memoryType)
+		tile.collected = true
+	}
 }

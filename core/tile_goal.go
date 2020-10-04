@@ -15,3 +15,6 @@ func (tile *TileGoal) Draw(sprites *SpriteSystem, target pixel.Target, position 
 	goalSprite := sprites.tileSprites[LargeTileTarget]
 	goalSprite.Draw(target, position)
 }
+
+func (tile *TileGoal) ModifyGhostPosition(position *GhostPosition) {
+}

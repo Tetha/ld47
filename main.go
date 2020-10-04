@@ -12,8 +12,10 @@ import (
 type GameState uint
 
 const (
-	GameStateNone = iota
+	GameStateNone GameState = iota
 	GameStateTileTest
+	GameStateSimulationTest
+	GameStateSimulationTest2
 )
 
 func run() {
@@ -44,13 +46,39 @@ func run() {
 		lastState = state
 
 		win.Clear(colornames.Black)
+
+		if win.Pressed(pixelgl.KeyEscape) {
+			return
+		}
+
+		if win.Pressed(pixelgl.KeyF1) {
+			state = GameStateTileTest
+		}
+
+		if win.Pressed(pixelgl.KeyF2) {
+			state = GameStateSimulationTest
+		}
+		if win.Pressed(pixelgl.KeyF3) {
+			state = GameStateSimulationTest2
+		}
+
 		switch state {
 		case GameStateTileTest:
 			if stateChanged {
 				screen = core.NewTileTestScreen(systems)
 			}
-			screen.Run(win, dt)
+		case GameStateSimulationTest:
+			if stateChanged {
+				systems.SetLevel(&core.TestLevelOne)
+				screen = core.NewSimulationScreen(systems)
+			}
+		case GameStateSimulationTest2:
+			if stateChanged {
+				systems.SetLevel(&core.TestLevelTwo)
+				screen = core.NewSimulationScreen(systems)
+			}
 		}
+		screen.Run(win, dt)
 		win.Update()
 	}
 }

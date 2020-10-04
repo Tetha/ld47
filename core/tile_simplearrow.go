@@ -52,3 +52,50 @@ func (tile *TileSimpleArrow) Draw(sprites *SpriteSystem, target pixel.Target, po
 	sprite := sprites.tileSprites[directionToSprite[tile.direction]]
 	sprite.Draw(target, position)
 }
+
+func (tile *TileSimpleArrow) ModifyGhostPosition(position *GhostPosition) {
+	switch tile.direction {
+	case ArrowDirectionStraightDown:
+		position.direction = GhostDirectionDown
+	case ArrowDirectionStraightUp:
+		position.direction = GhostDirectionUp
+	case ArrowDirectionStraightRight:
+		position.direction = GhostDirectionRight
+	case ArrowDirectionStraightLeft:
+		position.direction = GhostDirectionLeft
+
+	case ArrowDirectionLeftTurnFromBottom:
+		if position.direction == GhostDirectionUp {
+			position.direction = TurnLeft(position.direction)
+		}
+	case ArrowDirectionLeftTurnFromTop:
+		if position.direction == GhostDirectionDown {
+			position.direction = TurnLeft(position.direction)
+		}
+	case ArrowDirectionLeftTurnFromLeft:
+		if position.direction == GhostDirectionRight {
+			position.direction = TurnLeft(position.direction)
+		}
+	case ArrowDirectionLeftTurnFromRight:
+		if position.direction == GhostDirectionLeft {
+			position.direction = TurnLeft(position.direction)
+		}
+
+	case ArrowDirectionRightTurnFromBottom:
+		if position.direction == GhostDirectionUp {
+			position.direction = TurnRight(position.direction)
+		}
+	case ArrowDirectionRightTurnFromTop:
+		if position.direction == GhostDirectionDown {
+			position.direction = TurnRight(position.direction)
+		}
+	case ArrowDirectionRightTurnFromLeft:
+		if position.direction == GhostDirectionRight {
+			position.direction = TurnRight(position.direction)
+		}
+	case ArrowDirectionRightTurnFromRight:
+		if position.direction == GhostDirectionLeft {
+			position.direction = TurnRight(position.direction)
+		}
+	}
+}

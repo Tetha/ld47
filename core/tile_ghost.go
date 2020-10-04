@@ -12,10 +12,12 @@ type GhostID uint
 
 const (
 	GhostBlue = iota
+	GhostOrange
 )
 
 var ghostToColorMask = map[GhostID]pixel.RGBA{
-	GhostBlue: pixel.RGB(0.2, 0.2, 0.9),
+	GhostBlue:   pixel.RGB(0.2, 0.2, 0.9),
+	GhostOrange: pixel.RGB(0.8, 0.4, 0),
 }
 
 type TileGhost struct {
@@ -49,4 +51,7 @@ func (tile *TileGhost) Draw(sprites *SpriteSystem, target pixel.Target, position
 			ghostToColorMask[tile.ghostID])
 
 	}
+}
+
+func (tile *TileGhost) ModifyGhostPosition(position *GhostPosition) {
 }

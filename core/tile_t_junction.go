@@ -48,7 +48,7 @@ func (tile *TileTJunction) Draw(sprites *SpriteSystem, target pixel.Target, posi
 
 	baseTransformation := pixel.IM
 
-	if !tile.JunctionLeft {
+	if tile.JunctionLeft {
 		baseTransformation = baseTransformation.ScaledXY(pixel.ZV, pixel.V(-1, 1))
 	}
 	if tile.Direction == TJunctionDown {
@@ -80,4 +80,116 @@ func (tile *TileTJunction) Draw(sprites *SpriteSystem, target pixel.Target, posi
 	memoryTile.DrawColorMask(target, pixel.IM.Scaled(pixel.ZV, 0.25).Moved(memoryOffset).Chained(baseTransformation), ghostToColorMask[tile.Ghost])
 	noneTile.Draw(target, pixel.IM.Scaled(pixel.ZV, 0.25).Moved(noneOffset).Chained(baseTransformation))
 
+}
+
+func (tile *TileTJunction) ModifyGhostPosition(position *GhostPosition) {
+	switch tile.Direction {
+	case TJunctionDown:
+		if position.direction != GhostDirectionDown {
+			return
+		}
+
+		if position.HasMemory(tile.RequiredMemory) {
+			position.RemoveFirstMemory(tile.RequiredMemory)
+			// Memory is on the turn
+			if !tile.MemoryOnStraight {
+				if tile.JunctionLeft {
+					position.direction = TurnLeft(position.direction)
+				} else {
+					position.direction = TurnRight(position.direction)
+				}
+			}
+			return
+		} else {
+			// Memory is required straight ahead but we dont have it
+			if tile.MemoryOnStraight {
+				if tile.JunctionLeft {
+					position.direction = TurnLeft(position.direction)
+				} else {
+					position.direction = TurnRight(position.direction)
+				}
+			}
+		}
+
+	case TJunctionUp:
+		if position.direction != GhostDirectionUp {
+			return
+		}
+
+		if position.HasMemory(tile.RequiredMemory) {
+			position.RemoveFirstMemory(tile.RequiredMemory)
+			// Memory is on the turn
+			if !tile.MemoryOnStraight {
+				if tile.JunctionLeft {
+					position.direction = TurnLeft(position.direction)
+				} else {
+					position.direction = TurnRight(position.direction)
+				}
+			}
+			return
+		} else {
+			// Memory is required straight ahead but we dont have it
+			if tile.MemoryOnStraight {
+				if tile.JunctionLeft {
+					position.direction = TurnLeft(position.direction)
+				} else {
+					position.direction = TurnRight(position.direction)
+				}
+			}
+		}
+
+	case TJunctionLeft:
+		if position.direction != GhostDirectionLeft {
+			return
+		}
+
+		if position.HasMemory(tile.RequiredMemory) {
+			position.RemoveFirstMemory(tile.RequiredMemory)
+			// Memory is on the turn
+			if !tile.MemoryOnStraight {
+				if tile.JunctionLeft {
+					position.direction = TurnLeft(position.direction)
+				} else {
+					position.direction = TurnRight(position.direction)
+				}
+			}
+			return
+		} else {
+			// Memory is required straight ahead but we dont have it
+			if tile.MemoryOnStraight {
+				if tile.JunctionLeft {
+					position.direction = TurnLeft(position.direction)
+				} else {
+					position.direction = TurnRight(position.direction)
+				}
+			}
+		}
+
+	case TJunctionRight:
+		if position.direction != GhostDirectionRight {
+			return
+		}
+
+		if position.HasMemory(tile.RequiredMemory) {
+			position.RemoveFirstMemory(tile.RequiredMemory)
+			// Memory is on the turn
+			if !tile.MemoryOnStraight {
+				if tile.JunctionLeft {
+					position.direction = TurnLeft(position.direction)
+				} else {
+					position.direction = TurnRight(position.direction)
+				}
+			}
+			return
+		} else {
+			// Memory is required straight ahead but we dont have it
+			if tile.MemoryOnStraight {
+				if tile.JunctionLeft {
+					position.direction = TurnLeft(position.direction)
+				} else {
+					position.direction = TurnRight(position.direction)
+				}
+			}
+		}
+	}
 }
