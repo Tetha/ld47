@@ -25,6 +25,7 @@ const (
 
 type TileSimpleArrow struct {
 	direction ArrowDirection
+	Marked    bool
 }
 
 func NewTileSimpleArrow(direction ArrowDirection) *TileSimpleArrow {
@@ -51,6 +52,15 @@ var directionToSprite = map[ArrowDirection]LargeTileID{
 func (tile *TileSimpleArrow) Draw(sprites *SpriteSystem, target pixel.Target, position pixel.Matrix) {
 	sprite := sprites.tileSprites[directionToSprite[tile.direction]]
 	sprite.Draw(target, position)
+
+	if tile.Marked {
+		marker := sprites.tileSprites[LargeTileMarker]
+		marker.Draw(target, position)
+	}
+}
+
+func (tile *TileSimpleArrow) Mark(marked bool) {
+	tile.Marked = marked
 }
 
 func (tile *TileSimpleArrow) ModifyGhostPosition(position *GhostPosition) {

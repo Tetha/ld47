@@ -40,6 +40,9 @@ func (tile *TileMemory) Draw(sprites *SpriteSystem, target pixel.Target, positio
 	}
 }
 
+func (tile *TileMemory) Mark(marked bool) {
+}
+
 func (tile *TileMemory) ModifyGhostPosition(position *GhostPosition) {
 	if !tile.collected {
 		position.inventory = append(position.inventory, tile.memoryType)

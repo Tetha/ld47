@@ -43,6 +43,9 @@ func NewTileTJunction(ghost GhostID, requiredMemory MemoryType, direction TJunct
 	}
 }
 
+func (tile *TileTJunction) Mark(marked bool) {
+}
+
 func (tile *TileTJunction) Draw(sprites *SpriteSystem, target pixel.Target, position pixel.Matrix) {
 	baseTile := sprites.tileSprites[LargeTileArrowT]
 

@@ -16,5 +16,8 @@ func (tile *TileGoal) Draw(sprites *SpriteSystem, target pixel.Target, position 
 	goalSprite.Draw(target, position)
 }
 
+func (tile *TileGoal) Mark(marked bool) {
+}
+
 func (tile *TileGoal) ModifyGhostPosition(position *GhostPosition) {
 }

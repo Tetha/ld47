@@ -35,6 +35,15 @@ func (p *GhostPosition) RemoveFirstMemory(target MemoryType) {
 	}
 }
 
+func (p GhostPosition) Clone() GhostPosition {
+	return GhostPosition{
+		x:         p.x,
+		y:         p.y,
+		direction: p.direction,
+		id:        p.id,
+		inventory: append([]MemoryType(nil), p.inventory...),
+	}
+}
 func TurnLeft(direction GhostDirection) GhostDirection {
 	switch direction {
 	case GhostDirectionDown:

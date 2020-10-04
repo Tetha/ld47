@@ -1,6 +1,8 @@
 package core
 
 import (
+	"fmt"
+
 	"github.com/faiface/pixel"
 )
 
@@ -21,11 +23,14 @@ type SimulationState struct {
 }
 
 func NewSimulationScreen(systems *Systems) *SimulationScreen {
+	systems.MainScreen.UpperButtonText.Clear()
+	fmt.Fprint(systems.MainScreen.UpperButtonText, "<< Edit! Go back <<")
 	result := &SimulationScreen{
 		systems: systems,
-		batch:   pixel.NewBatch(&pixel.TrianglesData{}, systems.sprites.Sheet),
+		batch:   pixel.NewBatch(&pixel.TrianglesData{}, systems.Sprites.Sheet),
 	}
 	result.levelGrid = NewLevelGridComponent(systems)
+	result.levelGrid.ResetBaseMatrix(pixel.IM.Moved(pixel.V(25, 25)))
 
 	for _, initial := range systems.level.InitialGhostPositions {
 		systems.simulation.CurrentGhostPositions = append(systems.simulation.CurrentGhostPositions, GhostPosition{
@@ -47,7 +52,8 @@ func NewSimulationScreen(systems *Systems) *SimulationScreen {
 
 const timeBetweenSimulationTicks = 0.5
 
-func (screen *SimulationScreen) Run(target pixel.Target, dt float64) {
+func (screen *SimulationScreen) Run(target pixel.Target, dt float64) GameState {
+
 	screen.timeSinceLastSimulation += dt
 
 	if screen.timeSinceLastSimulation >= timeBetweenSimulationTicks {
@@ -59,6 +65,7 @@ func (screen *SimulationScreen) Run(target pixel.Target, dt float64) {
 	screen.batch.Clear()
 	screen.levelGrid.DrawLevelGrid(screen.batch, simulationTickPercentage)
 	screen.batch.Draw(target)
+	return GameStateKeep
 }
 
 func (screen *SimulationScreen) DoPhysicsStep() {
@@ -70,6 +77,12 @@ func (screen *SimulationScreen) DoPhysicsStep() {
 	for idx := range state.CurrentGhostPositions {
 		ghostPosition := &state.CurrentGhostPositions[idx]
 		for _, tile := range screen.systems.level.PresetTiles {
+			if tile.x == ghostPosition.x && tile.y == ghostPosition.y {
+				tile.content.ModifyGhostPosition(ghostPosition)
+			}
+		}
+
+		for _, tile := range screen.systems.input.PlacedTools {
 			if tile.x == ghostPosition.x && tile.y == ghostPosition.y {
 				tile.content.ModifyGhostPosition(ghostPosition)
 			}
@@ -98,4 +111,11 @@ func (screen *SimulationScreen) DoPhysicsStep() {
 		//spew.Dump(ghostPosition, newNextPosition)
 		state.NextGhostPositions = append(state.NextGhostPositions, newNextPosition)
 	}
+}
+
+func (screen *SimulationScreen) Click(pos pixel.Vec) GameState {
+	if screen.systems.MainScreen.UpperButtonBounds.Contains(pos) {
+		return GameStateEdit
+	}
+	return GameStateKeep
 }

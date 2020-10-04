@@ -7,7 +7,14 @@ type TileDefinition struct {
 }
 
 type Level struct {
-	InitialToolbox        []Tile
+	Toolbox               []Tile
 	PresetTiles           []TileDefinition
 	InitialGhostPositions []GhostPosition
+}
+
+type PlayerInput struct {
+	RemainingTools []Tile
+	PlacedTools    []TileDefinition
+
+	SelectedTile Tile
 }

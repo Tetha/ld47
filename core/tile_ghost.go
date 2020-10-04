@@ -23,10 +23,17 @@ var ghostToColorMask = map[GhostID]pixel.RGBA{
 type TileGhost struct {
 	ghostID   GhostID
 	inventory []MemoryType
+
+	direction        GhostDirection
+	displayDirection bool
 }
 
 func NewTileGhost(ghostID GhostID) *TileGhost {
 	return &TileGhost{ghostID: ghostID}
+}
+
+func (tile *TileGhost) SetDirection(ghostDirection GhostDirection) {
+	tile.direction = ghostDirection
 }
 
 func (tile *TileGhost) SetInventory(newInventory []MemoryType) {
@@ -35,9 +42,36 @@ func (tile *TileGhost) SetInventory(newInventory []MemoryType) {
 
 var specialSlots = []float64{math.Pi / 2, math.Pi / 4, math.Pi * 3 / 4}
 
+var directionToArrowSprite = map[GhostDirection]LargeTileID{
+	GhostDirectionUp:    LargeTileArrowStraightUp,
+	GhostDirectionDown:  LargeTileArrowStraightDown,
+	GhostDirectionRight: LargeTileArrowStraightRight,
+	GhostDirectionLeft:  LargeTileArrowStraightLeft,
+}
+
+func (tile *TileGhost) Mark(marked bool) {
+}
+
 func (tile *TileGhost) Draw(sprites *SpriteSystem, target pixel.Target, position pixel.Matrix) {
 	ghostSprite := sprites.tileSprites[LargeTileGhost]
 	ghostSprite.DrawColorMask(target, position, ghostToColorMask[tile.ghostID])
+
+	if tile.displayDirection {
+		offset := pixel.ZV
+		switch tile.direction {
+		case GhostDirectionUp:
+			offset = pixel.V(0, 20)
+		case GhostDirectionDown:
+			offset = pixel.V(0, -20)
+		case GhostDirectionLeft:
+			offset = pixel.V(-20, 0)
+		case GhostDirectionRight:
+			offset = pixel.V(20, 0)
+		}
+
+		arrowSprite := sprites.tileSprites[directionToArrowSprite[tile.direction]]
+		arrowSprite.Draw(target, pixel.IM.Scaled(pixel.ZV, 0.4).Moved(offset).Chained(position))
+	}
 
 	for idx, invMemory := range tile.inventory {
 		rotation := math.Pi + math.Pi/4.0*float64(idx-len(specialSlots))

@@ -58,4 +58,8 @@ var TestLevelOne = Level{
 			direction: GhostDirectionLeft,
 		},
 	},
+	Toolbox: []Tile{
+		NewTileSimpleArrow(ArrowDirectionStraightRight),
+		NewTileSimpleArrow(ArrowDirectionStraightRight),
+	},
 }

@@ -21,7 +21,7 @@ type TileTestScreen struct {
 func NewTileTestScreen(systems *Systems) *TileTestScreen {
 	result := &TileTestScreen{
 		systems:                systems,
-		screenBatch:            pixel.NewBatch(&pixel.TrianglesData{}, systems.sprites.Sheet),
+		screenBatch:            pixel.NewBatch(&pixel.TrianglesData{}, systems.Sprites.Sheet),
 		ghostTile:              NewTileGhost(GhostBlue),
 		ghostTileWithInventory: NewTileGhost(GhostBlue),
 		goalTile:               NewTileGoal(),
@@ -68,23 +68,29 @@ func NewTileTestScreen(systems *Systems) *TileTestScreen {
 	return result
 }
 
-func (screen *TileTestScreen) Run(target pixel.Target, _ float64) {
+func (screen *TileTestScreen) Run(target pixel.Target, _ float64) GameState {
 	screen.screenBatch.Clear()
-	screen.ghostTile.Draw(screen.systems.sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(100, 100)))
-	screen.ghostTileWithInventory.Draw(screen.systems.sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(200, 100)))
+	screen.ghostTile.Draw(screen.systems.Sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(100, 100)))
+	screen.ghostTileWithInventory.Draw(screen.systems.Sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(200, 100)))
 
 	for idx, tile := range screen.simpleArrows {
-		tile.Draw(screen.systems.sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(100+float64(50*idx), 200)))
+		tile.Draw(screen.systems.Sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(100+float64(50*idx), 200)))
 	}
 
 	for idx, tile := range screen.memoryBubbles {
-		tile.Draw(screen.systems.sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(100+float64(50*idx), 300)))
+		tile.Draw(screen.systems.Sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(100+float64(50*idx), 300)))
 	}
 
 	for idx, tile := range screen.tJunctions {
-		tile.Draw(screen.systems.sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(100+float64(50*idx), 400)))
+		tile.Draw(screen.systems.Sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(100+float64(50*idx), 400)))
 	}
 
-	screen.goalTile.Draw(screen.systems.sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(100, 500)))
+	screen.goalTile.Draw(screen.systems.Sprites, screen.screenBatch, pixel.IM.Moved(pixel.V(100, 500)))
 	screen.screenBatch.Draw(target)
+
+	return GameStateKeep
+}
+
+func (screen *TileTestScreen) Click(pos pixel.Vec) GameState {
+	return GameStateKeep
 }
